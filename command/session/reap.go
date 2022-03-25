@@ -1,21 +1,23 @@
-package command
+package session
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/oligarch316/go-sickle/command"
+	"github.com/oligarch316/go-sickle/config/data"
 	"github.com/spf13/cobra"
 )
 
 // TODO: Command to "drill down" to media items and download
 
-type paramsReap struct {
-	paramsSession
+type reapParams struct {
+	command.SessionParams
 	targets []string
 }
 
-func NewReap() *cobra.Command {
-	var params paramsReap
+func NewReap(defaultConfig data.Config) *cobra.Command {
+	var params reapParams
 
 	res := &cobra.Command{
 		Use:   "reap",
@@ -27,11 +29,13 @@ func NewReap() *cobra.Command {
 		},
 	}
 
+	params.Config = &defaultConfig
 	params.SetFlags(res.Flags())
+
 	return res
 }
 
-func runReap(params paramsReap) int {
+func runReap(params reapParams) int {
 	fmt.Println("reap: not yet implemented")
 	return 1
 }

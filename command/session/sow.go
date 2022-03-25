@@ -1,21 +1,23 @@
-package command
+package session
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/oligarch316/go-sickle/command"
+	"github.com/oligarch316/go-sickle/config/data"
 	"github.com/spf13/cobra"
 )
 
 // TODO: Command to "drill up" to collection items and collect
 
-type paramsSow struct {
-	paramsSession
+type sowParams struct {
+	command.SessionParams
 	targets []string
 }
 
-func NewSow() *cobra.Command {
-	var params paramsSow
+func NewSow(defaultConfig data.Config) *cobra.Command {
+	var params sowParams
 
 	res := &cobra.Command{
 		Use:   "sow",
@@ -27,11 +29,13 @@ func NewSow() *cobra.Command {
 		},
 	}
 
+	params.Config = &defaultConfig
 	params.SetFlags(res.Flags())
+
 	return res
 }
 
-func runSow(params paramsSow) int {
+func runSow(params sowParams) int {
 	fmt.Println("sow: not yet implemented")
 	return 1
 }

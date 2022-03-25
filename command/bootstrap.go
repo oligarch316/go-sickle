@@ -5,58 +5,83 @@ import (
 	"os"
 
 	"github.com/oligarch316/go-sickle/config"
+	"github.com/oligarch316/go-sickle/config/data"
+	"github.com/oligarch316/go-sickle/config/flag"
 	"github.com/oligarch316/go-sickle/observ"
 	"github.com/spf13/pflag"
 )
 
-type paramsBootstrap struct {
-	flagConfigFilepath string
-	flagData           config.Data
+const configPathNone = "none"
+
+type BootstrapParams struct {
+	configFilePath string
+
+	*data.Config
+	flag.DeferredList
 }
 
-func (pb *paramsBootstrap) SetFlags(fs *pflag.FlagSet) {
+func (bp *BootstrapParams) SetFlags(fs *pflag.FlagSet) {
 	// config file path flag
-	fs.StringVar(&pb.flagConfigFilepath, "config", "", "TODO-usage")
+	fs.StringVar(&bp.configFilePath, "config", "", "TODO-usage")
 
 	// observ flags
-	fs.StringVar(&pb.flagData.Observ.LogLevel, "log-level", "info", "TODO-usage")
-	fs.StringVar(&pb.flagData.Observ.LogEncoding, "log-encoding", "console", "TODO-usage")
-	fs.BoolVar(&pb.flagData.Observ.LogCaller, "log-caller", false, "TODO-usage")
-	fs.BoolVar(&pb.flagData.Observ.LogStacktrace, "log-stacktrace", false, "TODO-usage")
+	bp.Var(fs, &bp.Observ.Log.Encoding, "log-encoding", "TODO-usage")
+	bp.Var(fs, &bp.Observ.Log.Level, "log-level", "TODO-usage")
+	bp.Var(fs, &bp.Observ.Log.EnableCaller, "log-caller", "TODO-usage")
+	bp.Var(fs, &bp.Observ.Log.EnableStacktrace, "log-stacktrace", "TODO-usage")
 }
 
 // TODO: logger.Sync() on close
 
-type bootstrapData struct {
-	logger     *observ.Logger
-	configData config.Data
+type Bootstrap struct {
+	Logger *observ.Logger
+	Config data.Config
 }
 
-func newBootstrap(params paramsBootstrap) (*bootstrapData, int) {
-	var (
-		bootLogger = log.New(os.Stderr, "[bootstrap] ", log.LstdFlags)
-		configData = params.flagData
-	)
-
-	if params.flagConfigFilepath != "" {
-		fileData, err := config.LoadData(params.flagConfigFilepath)
-		if err != nil {
-			bootLogger.Printf("failed to load config file '%s': %s\n", params.flagConfigFilepath, err)
-			return nil, 1
-		}
-
-		configData = config.MergeData(fileData, configData)
+func bootstrapConfigPath(params BootstrapParams) (string, bool) {
+	if params.configFilePath != "" {
+		return params.configFilePath, params.configFilePath != configPathNone
 	}
 
-	logger, err := config.BuildObserv(configData.Observ)
+	defaultPath := config.DefaultFilePath()
+	if defaultPath == "" {
+		return "", false
+	}
+
+	if info, err := os.Stat(defaultPath); err == nil && !info.IsDir() {
+		return defaultPath, true
+	}
+
+	return "", false
+}
+
+func NewBootstrap(params BootstrapParams) (*Bootstrap, int) {
+	bootLogger := log.New(os.Stderr, "[bootstrap] ", log.LstdFlags)
+
+	// Load file data into config if available
+	if fpath, ok := bootstrapConfigPath(params); ok {
+		if err := data.LoadConfigFile(fpath, params.Config); err != nil {
+			bootLogger.Printf("failed to load config file '%s': %s\n", fpath, err)
+			return nil, 1
+		}
+	}
+
+	// Load flag data into config
+	if err := params.DeferredList.Apply(); err != nil {
+		bootLogger.Printf("failed to load config flags: %s\n", err)
+		return nil, 1
+	}
+
+	// Build logger from config
+	logger, err := data.BuildObserv(params.Config.Observ)
 	if err != nil {
 		bootLogger.Printf("failed to build logger: %s\n", err)
 		return nil, 1
 	}
 
-	res := &bootstrapData{
-		logger:     logger,
-		configData: configData,
+	res := &Bootstrap{
+		Logger: logger,
+		Config: *params.Config,
 	}
 
 	return res, 0

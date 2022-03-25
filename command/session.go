@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 
-	"github.com/oligarch316/go-sickle/config"
+	"github.com/oligarch316/go-sickle/config/data"
 	"github.com/oligarch316/go-sickle/consume"
 	"github.com/oligarch316/go-sickle/observ"
 	"github.com/oligarch316/go-sickle/transform"
@@ -11,49 +11,49 @@ import (
 	"go.uber.org/zap"
 )
 
-type paramsSession struct{ paramsBootstrap }
+type SessionParams struct{ BootstrapParams }
 
-func (ps *paramsSession) SetFlags(fs *pflag.FlagSet) {
+func (sp *SessionParams) SetFlags(fs *pflag.FlagSet) {
 	// bootstrap flags
-	ps.paramsBootstrap.SetFlags(fs)
+	sp.BootstrapParams.SetFlags(fs)
 
 	// plugin flags
-	fs.StringArrayVar(&ps.flagData.Plugin.Files, "plugin-file", nil, "TODO-usage")
-	fs.StringArrayVar(&ps.flagData.Plugin.Directories, "plugin-directory", nil, "TODO-usage")
-	fs.StringArrayVar(&ps.flagData.Plugin.Trees, "plugin-tree", nil, "TODO-usage")
+	sp.Var(fs, &sp.Plugin.Files, "plugin-file", "TODO-usage")
+	sp.Var(fs, &sp.Plugin.Directories, "plugin-directory", "TODO-usage")
+	sp.Var(fs, &sp.Plugin.Trees, "plugin-tree", "TODO-usage")
 
 	// consumer flags
-	fs.StringArrayVar(&ps.flagData.Consumer.Plugins.Any, "out", nil, "TODO-usage")
-	fs.StringArrayVar(&ps.flagData.Consumer.Plugins.Parsed, "out-parsed", nil, "TODO-usage")
-	fs.StringArrayVar(&ps.flagData.Consumer.Plugins.Classified, "out-classified", nil, "TODO-usage")
-	fs.StringArrayVar(&ps.flagData.Consumer.Plugins.Collection, "out-collection", nil, "TODO-usage")
-	fs.StringArrayVar(&ps.flagData.Consumer.Plugins.Media, "out-media", nil, "TODO-usage")
+	sp.Var(fs, &sp.Consumer.Plugins.Any, "out", "TODO-usage")
+	sp.Var(fs, &sp.Consumer.Plugins.Parsed, "out-parsed", "TODO-usage")
+	sp.Var(fs, &sp.Consumer.Plugins.Classified, "out-classified", "TODO-usage")
+	sp.Var(fs, &sp.Consumer.Plugins.Collection, "out-collection", "TODO-usage")
+	sp.Var(fs, &sp.Consumer.Plugins.Media, "out-media", "TODO-usage")
 
 	// transformer flags
-	fs.StringArrayVar(&ps.flagData.Transformer.Plugins, "use", []string{config.TransformerPluginNameAll}, "TODO-usage")
+	sp.Var(fs, &sp.Transformer.Plugins, "use", "TODO-usage")
 }
 
 // TODO: interrupt stuffs
 // TODO: (bootstrap) logger.Sync() on close
 
-type sessionData struct {
-	ctx         context.Context
-	logger      *observ.Logger
-	consumer    *consume.Dispatcher
-	transformer *transform.Dispatcher
+type Session struct {
+	Context     context.Context
+	Logger      *observ.Logger
+	Consumer    *consume.Dispatcher
+	Transformer *transform.Dispatcher
 }
 
-func newSession(params paramsSession) (*sessionData, int) {
-	bootstrap, status := newBootstrap(params.paramsBootstrap)
+func NewSession(params SessionParams) (*Session, int) {
+	bootstrap, status := NewBootstrap(params.BootstrapParams)
 	if status != 0 {
 		return nil, status
 	}
 
-	rootLogger := bootstrap.logger.Named("root")
+	rootLogger := bootstrap.Logger.Named("root")
 
-	registry, err := config.BuildRegistry(
-		bootstrap.configData.Plugin,
-		bootstrap.logger.Named("plugin"),
+	registry, err := data.BuildRegistry(
+		bootstrap.Config.Plugin,
+		bootstrap.Logger.Named("plugin"),
 	)
 
 	if err != nil {
@@ -61,10 +61,10 @@ func newSession(params paramsSession) (*sessionData, int) {
 		return nil, 1
 	}
 
-	consumerDispatch, err := config.BuildConsumer(
-		bootstrap.configData.Consumer,
+	consumer, err := data.BuildConsumer(
+		bootstrap.Config.Consumer,
 		registry,
-		bootstrap.logger.Named("consumerDispatch"),
+		bootstrap.Logger.Named("consumerDispatch"),
 	)
 
 	if err != nil {
@@ -72,10 +72,10 @@ func newSession(params paramsSession) (*sessionData, int) {
 		return nil, 1
 	}
 
-	transformerDispatch, err := config.BuildTransformer(
-		bootstrap.configData.Transformer,
+	transformer, err := data.BuildTransformer(
+		bootstrap.Config.Transformer,
 		registry,
-		bootstrap.logger.Named("transformerDispatch"),
+		bootstrap.Logger.Named("transformerDispatch"),
 	)
 
 	if err != nil {
@@ -83,11 +83,11 @@ func newSession(params paramsSession) (*sessionData, int) {
 		return nil, 1
 	}
 
-	res := &sessionData{
-		ctx:         context.Background(),
-		logger:      rootLogger,
-		consumer:    consumerDispatch,
-		transformer: transformerDispatch,
+	res := &Session{
+		Context:     context.Background(),
+		Logger:      rootLogger,
+		Consumer:    consumer,
+		Transformer: transformer,
 	}
 
 	return res, 0

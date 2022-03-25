@@ -1,7 +1,8 @@
-package config
+package data
 
 import (
 	blade "github.com/oligarch316/go-sickle-blade"
+	"github.com/oligarch316/go-sickle/config/value"
 	"github.com/oligarch316/go-sickle/observ"
 	"github.com/oligarch316/go-sickle/plugin"
 	"github.com/oligarch316/go-sickle/transform"
@@ -9,17 +10,11 @@ import (
 
 const TransformerPluginNameAll = "all"
 
-type TransformerData struct {
-	Plugins []string `dhall:"plugins"`
+type TransformerConfig struct {
+	Plugins value.Set[value.String, *value.String] `dhall:"plugins"`
 }
 
-func MergeTransformerData(base, priority TransformerData) TransformerData {
-	return TransformerData{
-		Plugins: append(base.Plugins, priority.Plugins...),
-	}
-}
-
-func BuildTransformer(data TransformerData, registry *plugin.Registry, logger *observ.Logger) (*transform.Dispatcher, error) {
+func BuildTransformer(data TransformerConfig, registry *plugin.Registry, logger *observ.Logger) (*transform.Dispatcher, error) {
 	var (
 		res   = transform.NewDispatcher(logger)
 		items []blade.Transformer
@@ -31,7 +26,7 @@ func BuildTransformer(data TransformerData, registry *plugin.Registry, logger *o
 			break
 		}
 
-		item, err := registry.Transformers.Lookup(name)
+		item, err := registry.Transformers.Lookup(string(name))
 		if err != nil {
 			return nil, err
 		}

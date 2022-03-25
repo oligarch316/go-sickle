@@ -1,39 +1,28 @@
-package config
+package data
 
 import (
 	"fmt"
 
+	"github.com/oligarch316/go-sickle/config/value"
 	"github.com/oligarch316/go-sickle/observ"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
-// TODO: ObservDataLog as it's own type when/if necessary
+type ObservLogConfig struct {
+	Encoding value.String `dhall:"encoding"`
+	Level    value.String `dhall:"level"`
 
-type ObservData struct {
-	LogEncoding string `dhall:"logEncoding"`
-	LogLevel    string `dhall:"logLevel"`
-
-	LogCaller     bool `dhall:"logCaller"`
-	LogStacktrace bool `dhall:"logStacktrace"`
+	EnableCaller     value.Bool `dhall:"enableCaller"`
+	EnableStacktrace value.Bool `dhall:"enableStacktrace"`
 }
 
-func MergeObservData(base, priority ObservData) ObservData {
-	res := ObservData{LogLevel: base.LogLevel, LogEncoding: base.LogEncoding}
-
-	if priority.LogLevel != "" {
-		res.LogLevel = priority.LogLevel
-	}
-
-	if priority.LogEncoding != "" {
-		res.LogEncoding = priority.LogEncoding
-	}
-
-	return res
+type ObservConfig struct {
+	Log ObservLogConfig `dhall:"log"`
 }
 
-func BuildObserv(data ObservData) (*observ.Logger, error) {
-	atomicLevel, err := zap.ParseAtomicLevel(data.LogLevel)
+func BuildObserv(data ObservConfig) (*observ.Logger, error) {
+	atomicLevel, err := zap.ParseAtomicLevel(string(data.Log.Level))
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +39,7 @@ func BuildObserv(data ObservData) (*observ.Logger, error) {
 		EncodeCaller:  zapcore.ShortCallerEncoder,
 	}
 
-	switch data.LogEncoding {
+	switch data.Log.Encoding {
 	case "console":
 		encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 		encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
@@ -60,14 +49,14 @@ func BuildObserv(data ObservData) (*observ.Logger, error) {
 		encoderConfig.EncodeTime = zapcore.EpochTimeEncoder
 		encoderConfig.EncodeDuration = zapcore.SecondsDurationEncoder
 	default:
-		return nil, fmt.Errorf("invalid encoding: %s", data.LogEncoding)
+		return nil, fmt.Errorf("invalid encoding: %s", string(data.Log.Encoding))
 	}
 
 	zConfig := zap.Config{
 		Level:             atomicLevel,
-		DisableCaller:     !data.LogCaller,
-		DisableStacktrace: !data.LogStacktrace,
-		Encoding:          data.LogEncoding,
+		DisableCaller:     !bool(data.Log.EnableCaller),
+		DisableStacktrace: !bool(data.Log.EnableStacktrace),
+		Encoding:          string(data.Log.Encoding),
 		EncoderConfig:     encoderConfig,
 		OutputPaths:       []string{"stderr"},
 		ErrorOutputPaths:  []string{"stderr"},

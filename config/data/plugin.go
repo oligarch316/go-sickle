@@ -1,10 +1,11 @@
-package config
+package data
 
 import (
 	"os"
 	"path/filepath"
 	goplugin "plugin"
 
+	"github.com/oligarch316/go-sickle/config/value"
 	"github.com/oligarch316/go-sickle/observ"
 	"github.com/oligarch316/go-sickle/plugin"
 	"github.com/oligarch316/go-sickle/plugin/standard"
@@ -12,21 +13,13 @@ import (
 
 var stdProvider = standard.Provider{}
 
-type PluginData struct {
-	Files       []string `dhall:"files"`
-	Directories []string `dhall:"directories"`
-	Trees       []string `dhall:"trees"`
+type PluginConfig struct {
+	Files       value.Set[value.String, *value.String] `dhall:"files"`
+	Directories value.Set[value.String, *value.String] `dhall:"directories"`
+	Trees       value.Set[value.String, *value.String] `dhall:"trees"`
 }
 
-func MergePluginData(base, priority PluginData) PluginData {
-	return PluginData{
-		Files:       append(base.Files, priority.Files...),
-		Directories: append(base.Directories, priority.Directories...),
-		Trees:       append(base.Trees, priority.Trees...),
-	}
-}
-
-func BuildRegistry(data PluginData, logger *observ.Logger) (*plugin.Registry, error) {
+func BuildRegistry(data PluginConfig, logger *observ.Logger) (*plugin.Registry, error) {
 	res := plugin.NewRegistry(logger)
 
 	if err := res.AddProvider(stdProvider); err != nil {
@@ -48,11 +41,11 @@ func BuildRegistry(data PluginData, logger *observ.Logger) (*plugin.Registry, er
 	return res, nil
 }
 
-func pluginLoadData(data PluginData) ([]*goplugin.Plugin, error) {
+func pluginLoadData(data PluginConfig) ([]*goplugin.Plugin, error) {
 	var res []*goplugin.Plugin
 
 	for _, fpath := range data.Files {
-		p, err := pluginLoadFile(fpath)
+		p, err := pluginLoadFile(string(fpath))
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +54,7 @@ func pluginLoadData(data PluginData) ([]*goplugin.Plugin, error) {
 	}
 
 	for _, dpath := range data.Directories {
-		ps, _, err := pluginLoadDirectory(dpath)
+		ps, _, err := pluginLoadDirectory(string(dpath))
 		if err != nil {
 			return nil, err
 		}
@@ -70,7 +63,7 @@ func pluginLoadData(data PluginData) ([]*goplugin.Plugin, error) {
 	}
 
 	for _, tpath := range data.Trees {
-		ps, err := pluginLoadTree(tpath)
+		ps, err := pluginLoadTree(string(tpath))
 		if err != nil {
 			return nil, err
 		}

@@ -1,4 +1,4 @@
-package command
+package session
 
 import (
 	"fmt"
@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type paramsVersion struct{}
+type versionParams struct{}
 
-func (pv *paramsVersion) SetFlags(fs *pflag.FlagSet) {}
+func (pv *versionParams) SetFlags(fs *pflag.FlagSet) {}
 
 func NewVersion() *cobra.Command {
-	var params paramsVersion
+	var params versionParams
 
 	res := &cobra.Command{
 		Use:   "version",
@@ -25,10 +25,11 @@ func NewVersion() *cobra.Command {
 	}
 
 	params.SetFlags(res.Flags())
+
 	return res
 }
 
-func runVersion(params paramsVersion) int {
+func runVersion(params versionParams) int {
 	fmt.Println("version: not yet implemented")
 	return 1
 }
