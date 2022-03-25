@@ -3,8 +3,8 @@ package session
 import (
 	"os"
 
-	"github.com/oligarch316/go-sickle/command"
-	"github.com/oligarch316/go-sickle/config/data"
+	"github.com/oligarch316/go-sickle/pkg/command"
+	"github.com/oligarch316/go-sickle/pkg/config/data"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

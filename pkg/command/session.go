@@ -3,10 +3,10 @@ package command
 import (
 	"context"
 
-	"github.com/oligarch316/go-sickle/config/data"
-	"github.com/oligarch316/go-sickle/consume"
-	"github.com/oligarch316/go-sickle/observ"
-	"github.com/oligarch316/go-sickle/transform"
+	"github.com/oligarch316/go-sickle/pkg/config/data"
+	"github.com/oligarch316/go-sickle/pkg/consume"
+	"github.com/oligarch316/go-sickle/pkg/observ"
+	"github.com/oligarch316/go-sickle/pkg/transform"
 	"github.com/spf13/pflag"
 	"go.uber.org/zap"
 )

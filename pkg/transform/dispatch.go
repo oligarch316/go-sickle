@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	blade "github.com/oligarch316/go-sickle-blade"
-	"github.com/oligarch316/go-sickle/observ"
+	"github.com/oligarch316/go-sickle/pkg/observ"
 )
 
 // TODO: Add transformer set (mimicing consumerSet)

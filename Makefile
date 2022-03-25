@@ -13,7 +13,7 @@ default: build
 
 
 # ----- Build
-build_sources := $(shell find . -type f -name '*.go')
+build_sources := $(shell find pkg -type f -name '*.go')
 build_tail := _$(shell go env GOOS)_$(shell go env GOARCH)
 build_flags :=
 build_ld_flags :=

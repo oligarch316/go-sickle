@@ -4,10 +4,10 @@ import (
 	"os"
 
 	blade "github.com/oligarch316/go-sickle-blade"
-	"github.com/oligarch316/go-sickle/command"
-	"github.com/oligarch316/go-sickle/config/data"
-	"github.com/oligarch316/go-sickle/meta"
-	"github.com/oligarch316/go-sickle/transform"
+	"github.com/oligarch316/go-sickle/pkg/command"
+	"github.com/oligarch316/go-sickle/pkg/config/data"
+	"github.com/oligarch316/go-sickle/pkg/meta"
+	"github.com/oligarch316/go-sickle/pkg/transform"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

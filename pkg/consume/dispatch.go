@@ -5,8 +5,8 @@ import (
 	"net/url"
 
 	blade "github.com/oligarch316/go-sickle-blade"
-	"github.com/oligarch316/go-sickle/meta"
-	"github.com/oligarch316/go-sickle/observ"
+	"github.com/oligarch316/go-sickle/pkg/meta"
+	"github.com/oligarch316/go-sickle/pkg/observ"
 	"go.uber.org/zap"
 )
 

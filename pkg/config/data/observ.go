@@ -3,8 +3,8 @@ package data
 import (
 	"fmt"
 
-	"github.com/oligarch316/go-sickle/config/value"
-	"github.com/oligarch316/go-sickle/observ"
+	"github.com/oligarch316/go-sickle/pkg/config/value"
+	"github.com/oligarch316/go-sickle/pkg/observ"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

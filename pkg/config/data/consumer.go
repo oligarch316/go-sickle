@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	blade "github.com/oligarch316/go-sickle-blade"
-	"github.com/oligarch316/go-sickle/config/value"
-	"github.com/oligarch316/go-sickle/consume"
-	"github.com/oligarch316/go-sickle/observ"
-	"github.com/oligarch316/go-sickle/plugin"
+	"github.com/oligarch316/go-sickle/pkg/config/value"
+	"github.com/oligarch316/go-sickle/pkg/consume"
+	"github.com/oligarch316/go-sickle/pkg/observ"
+	"github.com/oligarch316/go-sickle/pkg/plugin"
 )
 
 type ConsumerPluginsConfig struct {

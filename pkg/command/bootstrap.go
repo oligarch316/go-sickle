@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/oligarch316/go-sickle/config"
-	"github.com/oligarch316/go-sickle/config/data"
-	"github.com/oligarch316/go-sickle/config/flag"
-	"github.com/oligarch316/go-sickle/observ"
+	"github.com/oligarch316/go-sickle/pkg/config"
+	"github.com/oligarch316/go-sickle/pkg/config/data"
+	"github.com/oligarch316/go-sickle/pkg/config/flag"
+	"github.com/oligarch316/go-sickle/pkg/observ"
 	"github.com/spf13/pflag"
 )
 

@@ -3,7 +3,7 @@ package transform
 import (
 	"errors"
 
-	"github.com/oligarch316/go-sickle/observ"
+	"github.com/oligarch316/go-sickle/pkg/observ"
 	"go.uber.org/zap"
 )
 

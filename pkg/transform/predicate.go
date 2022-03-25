@@ -2,7 +2,7 @@ package transform
 
 import (
 	blade "github.com/oligarch316/go-sickle-blade"
-	"github.com/oligarch316/go-sickle/meta"
+	"github.com/oligarch316/go-sickle/pkg/meta"
 )
 
 var (

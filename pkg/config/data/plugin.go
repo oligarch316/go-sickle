@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	goplugin "plugin"
 
-	"github.com/oligarch316/go-sickle/config/value"
-	"github.com/oligarch316/go-sickle/observ"
-	"github.com/oligarch316/go-sickle/plugin"
-	"github.com/oligarch316/go-sickle/plugin/standard"
+	"github.com/oligarch316/go-sickle/pkg/config/value"
+	"github.com/oligarch316/go-sickle/pkg/observ"
+	"github.com/oligarch316/go-sickle/pkg/plugin"
+	"github.com/oligarch316/go-sickle/pkg/plugin/standard"
 )
 
 var stdProvider = standard.Provider{}

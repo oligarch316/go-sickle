@@ -6,7 +6,7 @@ import (
 	"plugin"
 
 	blade "github.com/oligarch316/go-sickle-blade"
-	"github.com/oligarch316/go-sickle/observ"
+	"github.com/oligarch316/go-sickle/pkg/observ"
 	"go.uber.org/zap"
 )
 

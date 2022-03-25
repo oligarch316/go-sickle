@@ -1,6 +1,6 @@
 package consume
 
-import "github.com/oligarch316/go-sickle/meta"
+import "github.com/oligarch316/go-sickle/pkg/meta"
 
 type Predicate func(error) (accept bool)
 

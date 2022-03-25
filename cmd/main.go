@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/oligarch316/go-sickle/command/session"
-	"github.com/oligarch316/go-sickle/config/data"
+	"github.com/oligarch316/go-sickle/pkg/command/session"
+	"github.com/oligarch316/go-sickle/pkg/config/data"
 )
 
 // TODO: Generate and embed from package.dhall
