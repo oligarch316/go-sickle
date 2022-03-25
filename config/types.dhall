@@ -1,3 +1,5 @@
+#!/usr/bin/env -S dhall --file
+
 let ObservLogConfig =
       { encoding : Text
       , level : Text
