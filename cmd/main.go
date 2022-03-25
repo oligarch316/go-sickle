@@ -2,18 +2,10 @@ package main
 
 import (
 	"github.com/oligarch316/go-sickle/pkg/command/session"
-	"github.com/oligarch316/go-sickle/pkg/config/data"
+	"github.com/oligarch316/go-sickle/pkg/embedded"
 )
 
-// TODO: Generate and embed from package.dhall
-var defaultConfig = data.Config{
-	Observ: data.ObservConfig{
-		Log: data.ObservLogConfig{
-			Encoding: "console",
-			Level:    "info",
-		},
-	},
-}
+var defaultConfig = embedded.MustLoadConfig()
 
 func main() {
 	root := session.NewSickle(defaultConfig)

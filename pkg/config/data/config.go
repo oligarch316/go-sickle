@@ -3,7 +3,7 @@ package data
 import (
 	"io/ioutil"
 
-	"github.com/philandstuff/dhall-golang"
+	"github.com/philandstuff/dhall-golang/v6"
 )
 
 type Config struct {
