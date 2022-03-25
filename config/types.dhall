@@ -1,5 +1,3 @@
-#!/usr/bin/env -S dhall --file
-
 let ObservLogConfig =
       { encoding : Text
       , level : Text
@@ -10,10 +8,7 @@ let ObservLogConfig =
 let ObservConfig = { log : ObservLogConfig }
 
 let PluginConfig =
-      { files : List Text
-      , directories : List Text
-      , trees : List Text
-      }
+      { files : List Text, directories : List Text, trees : List Text }
 
 let ConsumerPluginsConfig =
       { any : List Text
@@ -34,11 +29,11 @@ let Config =
       , transformer : TransformerConfig
       }
 
-in  { ObservLogConfig = ObservLogConfig
-    , ObservConfig = ObservConfig
-    , PluginConfig = PluginConfig
-    , ConsumerPluginsConfig = ConsumerPluginsConfig
-    , ConsumerConfig = ConsumerConfig
-    , TransformerConfig = TransformerConfig
-    , Config = Config
+in  { ObservLogConfig
+    , ObservConfig
+    , PluginConfig
+    , ConsumerPluginsConfig
+    , ConsumerConfig
+    , TransformerConfig
+    , Config
     }

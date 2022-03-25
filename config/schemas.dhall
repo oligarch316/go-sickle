@@ -1,5 +1,3 @@
-#!/usr/bin/env -S dhall --file
-
 let types = ./types.dhall
 
 let ObservLogConfig =
@@ -13,9 +11,7 @@ let ObservLogConfig =
       }
 
 let ObservConfig =
-      { Type = types.ObservConfig
-      , default.log = ObservLogConfig.default
-      }
+      { Type = types.ObservConfig, default.log = ObservLogConfig.default }
 
 let PluginConfig =
       { Type = types.PluginConfig
@@ -43,9 +39,7 @@ let ConsumerConfig =
       }
 
 let TransformerConfig =
-      { Type = types.TransformerConfig
-      , default.plugins = [] : List Text
-      }
+      { Type = types.TransformerConfig, default.plugins = [] : List Text }
 
 let Config =
       { Type = types.Config
@@ -57,11 +51,11 @@ let Config =
         }
       }
 
-in  { ObservLogConfig = ObservLogConfig
-    , ObservConfig = ObservConfig
-    , PluginConfig = PluginConfig
-    , ConsumerPluginsConfig = ConsumerPluginsConfig
-    , ConsumerConfig = ConsumerConfig
-    , TransformerConfig = TransformerConfig
-    , Config = Config
+in  { ObservLogConfig
+    , ObservConfig
+    , PluginConfig
+    , ConsumerPluginsConfig
+    , ConsumerConfig
+    , TransformerConfig
+    , Config
     }
