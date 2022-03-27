@@ -81,7 +81,7 @@ func (hm hostMux) Collect(ctx context.Context, url *url.URL) (blade.CollectionIt
 		query   = url.Hostname()
 		meta    = meta.Get(ctx).Transform
 		vResult = visitResult[blade.CollectionItem]{
-			err:           errClassifierNotFound,
+			err:           errCollectorNotFound,
 			errPredicate:  meta.ErrorPredicates.Accept,
 			itemPredicate: meta.CollectionPredicates.Accept,
 		}
@@ -129,7 +129,7 @@ func (hm hostMux) Download(ctx context.Context, url *url.URL) (blade.MediaItem, 
 		query   = url.Hostname()
 		meta    = meta.Get(ctx).Transform
 		vResult = visitResult[blade.MediaItem]{
-			err:           errClassifierNotFound,
+			err:           errDownloaderNotFound,
 			errPredicate:  meta.ErrorPredicates.Accept,
 			itemPredicate: meta.MediaPredicates.Accept,
 		}
