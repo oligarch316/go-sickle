@@ -8,6 +8,9 @@ import (
 // Pretty constraint type inference like in the generics spec docs doesn't seem
 // to apply when using Set[...] as a struct field type in the data package
 
+// Currently no logic to wholesale replace set, which means added flags
+// do not replace values from config, only append
+
 type valStatic interface {
 	String() string
 	Type() string
@@ -18,7 +21,6 @@ type valMutable[T valStatic] interface {
 	*T
 }
 
-// type Set[V config.Value, MV config.MutableValue[V]] []V
 type Set[V valStatic, VM valMutable[V]] []V
 
 func (s *Set[V, VM]) Set(val string) error {

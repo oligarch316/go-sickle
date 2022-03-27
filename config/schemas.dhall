@@ -39,7 +39,9 @@ let ConsumerConfig =
       }
 
 let TransformerConfig =
-      { Type = types.TransformerConfig, default.plugins = [] : List Text }
+      { Type = types.TransformerConfig
+      , default.plugins = [ "all" ] : List Text
+      }
 
 let Config =
       { Type = types.Config
