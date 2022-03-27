@@ -47,7 +47,7 @@ asset_targets := $(asset_target_config)
 $(asset_target_config): $(config_sources)
 	$(info Building '$@')
 	@mkdir -p $(@D)
-	$(cmd_dhall) --plain --ascii \
+	@$(cmd_dhall) --plain --ascii \
 		<<< 'let x = ./config/schemas.dhall in x.Config.default' \
 		| $(cmd_dhall) encode > $@
 
