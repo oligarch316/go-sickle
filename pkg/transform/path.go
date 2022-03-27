@@ -135,7 +135,7 @@ func (pm pathMux) Download(ctx context.Context, hostData blade.HostData) (blade.
 		query   = hostData.URL.Path
 		meta    = meta.Get(ctx).Transform
 		vResult = visitResult[blade.MediaItem]{
-			err:           errCollectorNotFound,
+			err:           errDownloaderNotFound,
 			errPredicate:  meta.ErrorPredicates.Accept,
 			itemPredicate: meta.MediaPredicates.Accept,
 		}
