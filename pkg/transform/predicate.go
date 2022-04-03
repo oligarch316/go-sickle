@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	RequireCollectionItem = requireItemType(blade.ItemTypeCollection)
-	RequireMediaItem      = requireItemType(blade.ItemTypeMedia)
+	RequireCollectionItem = requireItemClass(blade.ItemClassCollection)
+	RequireMediaItem      = requireItemClass(blade.ItemClassMedia)
 )
 
 type (
@@ -22,6 +22,6 @@ func (pc PredicateClassified) Apply(m *meta.Meta) { m.Transform.ClassifiedPredic
 func (pc PredicateCollection) Apply(m *meta.Meta) { m.Transform.CollectionPredicates.Append(pc) }
 func (pm PredicateMedia) Apply(m *meta.Meta)      { m.Transform.MediaPredicates.Append(pm) }
 
-func requireItemType(itemType blade.ItemType) PredicateClassified {
-	return func(item blade.ClassifiedItem) bool { return item.Type() == itemType }
+func requireItemClass(class blade.ItemClass) PredicateClassified {
+	return func(item blade.ClassifiedItem) bool { return item.Class() == class }
 }

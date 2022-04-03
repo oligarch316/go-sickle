@@ -63,11 +63,11 @@ func runDownload(params downloadParams) int {
 		}
 
 		// TODO: ugly, type system should really be involved in this assertion
-		if classified.Type() != blade.ItemTypeMedia {
+		if actual := classified.Class(); actual != blade.ItemClassMedia {
 			session.Logger.Error(
 				"internal error, unexpected classified item class",
-				zap.Stringer("expected", blade.ItemTypeMedia),
-				zap.Stringer("actual", classified.Type()),
+				zap.Stringer("expected", blade.ItemClassMedia),
+				zap.Stringer("actual", actual),
 			)
 			return 2
 		}
@@ -77,13 +77,13 @@ func runDownload(params downloadParams) int {
 			return 1
 		}
 
-		classifiedURL, err := classified.URL()
+		normalURL, err := classified.NormalURL()
 		if err != nil {
 			session.Logger.Error("failed to read url from classified item", zap.Error(err))
 			return 1
 		}
 
-		media, err := session.Transformer.Download(ctx, classifiedURL)
+		media, err := session.Transformer.Download(ctx, normalURL)
 		if err != nil {
 			session.Logger.Error("failed to download classified item", zap.Error(err))
 			return 1
