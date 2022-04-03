@@ -63,11 +63,11 @@ func runCollect(params collectParams) int {
 		}
 
 		// TODO: ugly, type system should really be involved in this assertion
-		if classified.Type() != blade.ItemTypeCollection {
+		if actual := classified.Class(); actual != blade.ItemClassCollection {
 			session.Logger.Error(
 				"internal error, unexpected classified item class",
-				zap.Stringer("expected", blade.ItemTypeCollection),
-				zap.Stringer("actual", classified.Type()),
+				zap.Stringer("expected", blade.ItemClassCollection),
+				zap.Stringer("actual", actual),
 			)
 			return 2
 		}
@@ -77,13 +77,13 @@ func runCollect(params collectParams) int {
 			return 1
 		}
 
-		classifiedURL, err := classified.URL()
+		normalURL, err := classified.NormalURL()
 		if err != nil {
 			session.Logger.Error("failed to read url from classified item", zap.Error(err))
 			return 1
 		}
 
-		collection, err := session.Transformer.Collect(ctx, classifiedURL)
+		collection, err := session.Transformer.Collect(ctx, normalURL)
 		if err != nil {
 			session.Logger.Error("failed to collect classified item", zap.Error(err))
 			return 1

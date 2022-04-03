@@ -113,6 +113,7 @@ func (r *Registry) addTransformers(transformers []blade.Transformer) error {
 	return nil
 }
 
+// TODO: Wrap applicable errors with provider info
 func (r *Registry) AddProvider(provider blade.Provider) error {
 	var (
 		pName = provider.Info().Name

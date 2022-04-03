@@ -15,7 +15,7 @@ func (Provider) Info() blade.ProviderInfo { return info }
 func (Provider) Consumers(data blade.ProviderData) ([]blade.Consumer, error) {
 	res := []blade.Consumer{
 		LogConsumer{logger: data.Logger.Named("log")},
-		// TODO
+		FileConsumer{logger: data.Logger.Named("file")},
 	}
 
 	return res, nil
